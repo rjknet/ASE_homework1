@@ -135,7 +135,8 @@ def edit_foodlist(id, user, item):
         # the check if the user has not added food to the party is inside the remove() method of the Food class, called inside 
         # the remove_from_food_list() method in the Party class
         try:
-            if user not in party.guests:
+            if user not in party.guests: # this check is done because the remove_from_food_list() method will not check whether the user is
+                                         # in the guest list (whereas the add_to_food_list() does this check)
                 raise NotInvitedGuestError(user + " is not invited to this party")
             party.remove_from_food_list(item, user)
             result = jsonify(msg = "Food deleted!")

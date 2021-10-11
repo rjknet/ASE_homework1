@@ -44,7 +44,7 @@ def exists_party(_id):
     global _PARTY_NUMBER
     global _LOADED_PARTIES
 
-    if int(_id) >= _PARTY_NUMBER:
+    if int(_id) > _PARTY_NUMBER:
         abort(404)  # error 404: Not Found, i.e. wrong URL, resource does not exist
     elif not(_id in _LOADED_PARTIES):
         abort(410)  # error 410: Gone, i.e. it existed but it's not there anymore
@@ -85,11 +85,8 @@ def single_party(id):
                 break
 
     elif 'DELETE' == request.method:
-        for key in _LOADED_PARTIES.keys():
-            if _LOADED_PARTIES[key].id == int(id): # find the party to be removed
-                result = _LOADED_PARTIES[key].serialize() # save it to be returned
-                _LOADED_PARTIES.pop(key) # remove the element from the dictionary
-                break
+        result = _LOADED_PARTIES[id].serialize() # save the party to be returned
+        _LOADED_PARTIES.pop(id) # remove the element from the dictionary
 
     return result
 
@@ -102,15 +99,12 @@ def get_foodlist(id):
     exists_party(id)
     
     if 'GET' == request.method:
-        for key in _LOADED_PARTIES.keys():
-            if _LOADED_PARTIES[key].id == int(id):
-                result = jsonify(foodlist = _LOADED_PARTIES[key].get_food_list().serialize())
-                # the foodlist is retrieved from the party _LOADED_PARTIES[key] using the method
-                # get_food_list(). This method will return a FoodList object, so it must be serialized
-                # to obtain a list of Food serialized objects. Finally, the jsonify() function is applied
-                # to convert the array into json format
-                break
-
+        result = jsonify(foodlist = _LOADED_PARTIES[id].get_food_list().serialize())
+        # the foodlist is retrieved from the party _LOADED_PARTIES[id] using the method
+        # get_food_list(). This method will return a FoodList object, so it must be serialized
+        # to obtain a list of Food serialized objects. Finally, the jsonify() function is applied
+        # to convert the array into json format
+        
     return result
 
 
@@ -121,11 +115,7 @@ def edit_foodlist(id, user, item):
     exists_party(id)
 
     # retrieve the party given the specific id
-    party = None
-    for key in _LOADED_PARTIES.keys():
-        if _LOADED_PARTIES[key].id == int(id):
-            party = _LOADED_PARTIES[key]
-            break
+    party = _LOADED_PARTIES[id]
 
     result = ""
 

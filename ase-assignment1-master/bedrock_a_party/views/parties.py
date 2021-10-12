@@ -13,6 +13,11 @@ _PARTY_NUMBER = 0  # index of the last created party
 # These are utility functions. Use them, DON'T CHANGE THEM!!
 #
 # the function exists_party() presented an error in thee first if condition: > needed to be substituted with >=
+# e.g.: assuming to have entered 2 parties by means of two POST /parties requests, the value of the _PARTY_NUMBER variable will have been increased to 2 
+# (from 0 to 1 when the 1st party is added and from 1 to 2 when the 2nd party is added). 
+# Now, to verify the HTTP error codes that the application returns, if a GET /party/2 request is made (for a party that has not yet been entered) 
+# the returned error is 410, when in reality it should be 404, since the party was never entered (while 410 would mean that the party existed and was removed). 
+# To fix the problem it would be sufficient to use >= instead of > in the 1st if condition of the exists_party() function
 #
 
 def create_party(req):
